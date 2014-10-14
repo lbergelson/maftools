@@ -1,4 +1,4 @@
-from maf_utils import *
+from maftools.maftools import *
 
 m = Maf("test.maf")
 m.addAnnotator("ends in n", lambda x: x['sample'].endswith('n'))
