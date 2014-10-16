@@ -7,6 +7,7 @@ class Maf:
     
    def __init__(self, filename):
     self.filename = filename
+    self.lines = 0
     self.comments = [] 
     self._setup_reader()
     self.fieldnames = self.reader.fieldnames
@@ -14,6 +15,9 @@ class Maf:
     self.annotators = {}
     
    def _check_and_store_comment(self, row):
+        if self.lines % 1000 == 0:
+            print "Read %d lines" % self.lines
+        self.lines += 1
         if row.startswith('#'):
             self.comments.append( row )
             return True
@@ -26,7 +30,7 @@ class Maf:
         self.reader = csv.DictReader(tmp_no_comment, delimiter='\t')
 
    def write(self, output_file):
-        with open(output_file,"wb") as output:
+        with open(output_file,"wb", 100000000) as output:
             wd = csv.DictWriter(output ,self.fieldnames,lineterminator=os.linesep, delimiter="\t")
             header_written = False
             for row in self.reader:
@@ -39,9 +43,8 @@ class Maf:
              for a in self.annotators:
                f = self.annotators[a]
                row[a] = f(row)
-             if any( [f(row) for f in self.filters ] ):
+             if len(self.filters) == 0 or all( [f(row) for f in self.filters ] ):
                 wd.writerow(row)
-              
             
    def addFilter(self, f):
         self.filters.append(f)

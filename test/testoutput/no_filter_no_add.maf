@@ -1,0 +1,7 @@
+#a particularly bad maf
+#it's not really a maf at all...
+sample	age	gender
+john	200	male
+#why is there a comment here?
+jane	100	female
+zaphod	30	alien
